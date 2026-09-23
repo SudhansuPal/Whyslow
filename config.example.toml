@@ -1,0 +1,47 @@
+# whyslow configuration. Copy to:
+#   ~/Library/Application Support/whyslow/config.toml
+# Every key is optional; these are the defaults. Unknown keys, wrong types and
+# out-of-range values are rejected at startup. Run `whyslow config` to see the
+# effective values.
+
+[sampling]
+interval_seconds = 1.0            # 0.25 - 60
+process_top_n = 10                # per-tick process rows stored (top by CPU)
+min_process_cpu_percent = 1.0     # ...but only if above this (100 = one core)
+memory_snapshot_every = 30        # also store the top-N by memory every N ticks
+# Read CPU/RSS of processes owned by other users (root, WindowServer, ...) via
+# Apple's setuid /bin/ps. No sudo involved. Off = those count as "unattributed".
+system_process_visibility = true
+
+[storage]
+retention_days = 7                # raw per-second samples
+rollup_retention_days = 180       # hourly per-app totals and detected spikes
+
+[privacy]
+# "redact"    - store/show command lines with secrets masked (default)
+# "name_only" - never store or show command-line arguments at all
+cmdline = "redact"
+
+[detector]                        # spike detection
+baseline_window_seconds = 300     # rolling baseline (30 - 3600)
+threshold_k = 4.0                 # spike = value > median + max(k * spread, min_delta)...
+sustain_samples = 3               # ...for this many consecutive samples
+cpu_min_delta_percent = 15.0      # min_delta per metric: smallest jump that counts
+memory_min_delta_percent = 5.0
+disk_min_delta_mb_per_s = 20.0
+net_min_delta_mb_per_s = 1.0
+culprits_top_n = 5                # processes recorded per spike
+
+[dashboard]                       # web UI; always bound to 127.0.0.1 (not configurable)
+enabled = true
+port = 8765                       # 1024 - 65535
+open_browser = true               # open it when `whyslow start` runs
+
+[helpers]                         # optional, sudo-gated; off by default
+# Per-process disk I/O, network AND energy, all from one root-only command.
+# Needs a sudoers rule first: run `whyslow helpers --sudoers`.
+# whyslow runs one 1-second sample every interval_seconds via `sudo -n` and
+# never keeps a root process alive. fs_usage and nettop are not used: see
+# src/whyslow/helpers.py for why.
+powermetrics = false
+interval_seconds = 30.0           # 5 - 3600
