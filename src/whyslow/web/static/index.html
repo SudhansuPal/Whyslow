@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>whyslow</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/vendor/chart.umd.min.js" defer></script>
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>whyslow</h1>
+      <span class="tagline">Why is this slow?</span>
+    </div>
+    <div class="status">
+      <span id="live" class="pill"><span class="pill-icon" aria-hidden="true">●</span><span id="live-text">Connecting…</span></span>
+      <span id="mode" class="pill pill-neutral"></span>
+    </div>
+  </header>
+
+  <section id="gate" class="gate" hidden>
+    <h2 id="gate-title">Sign in from your terminal</h2>
+    <p id="gate-text">For your privacy the dashboard only opens through a one-time link. Run
+      <code>whyslow dashboard</code> to open it.</p>
+  </section>
+
+  <main id="main" hidden>
+    <details class="notes" id="notes">
+      <summary>What this mode can't see</summary>
+      <ul id="notes-list"></ul>
+    </details>
+
+    <nav class="filters" aria-label="Time range">
+      <div class="seg" role="group" aria-label="Time range" id="range">
+        <button type="button" data-seconds="300">5 min</button>
+        <button type="button" data-seconds="900" aria-pressed="true">15 min</button>
+        <button type="button" data-seconds="3600">1 hour</button>
+        <button type="button" data-seconds="21600">6 hours</button>
+        <button type="button" data-seconds="86400">24 hours</button>
+      </div>
+      <span class="filters-note" id="range-note"></span>
+    </nav>
+
+    <section class="tiles" aria-label="Current values">
+      <div class="tile" id="tile-cpu"><span class="tile-label">CPU</span><span class="tile-value">–</span><span class="tile-sub"></span></div>
+      <div class="tile" id="tile-memory"><span class="tile-label">Memory</span><span class="tile-value">–</span><span class="tile-sub"></span></div>
+      <div class="tile" id="tile-disk"><span class="tile-label">Disk</span><span class="tile-value">–</span><span class="tile-sub"></span></div>
+      <div class="tile" id="tile-net"><span class="tile-label">Network</span><span class="tile-value">–</span><span class="tile-sub"></span></div>
+      <div class="tile" id="tile-battery"><span class="tile-label">Battery</span><span class="tile-value">–</span><span class="tile-sub"></span></div>
+    </section>
+
+    <section class="charts" id="charts" aria-label="Charts"></section>
+
+    <section class="split">
+      <article class="card">
+        <header class="card-head">
+          <h2>Spikes</h2>
+          <p class="sub">Shaded on the charts. Select one to see what caused it.</p>
+        </header>
+        <div class="table-wrap">
+          <table class="table" id="spike-table">
+            <thead><tr><th>When</th><th>What</th><th class="num">Peak</th><th class="num">Normal</th><th class="num">Lasted</th><th>Likely cause</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty" id="spike-empty" hidden>No spikes in this period.</p>
+      </article>
+
+      <article class="card" id="detail">
+        <header class="card-head">
+          <h2 id="detail-title">Spike details</h2>
+          <p class="sub" id="detail-sub"></p>
+        </header>
+        <div id="detail-body"><p class="empty">Select a spike in the list, or click a shaded band on a chart.</p></div>
+      </article>
+    </section>
+
+    <section class="split">
+      <article class="card">
+        <header class="card-head">
+          <h2>Offenders</h2>
+          <p class="sub" id="board-sub">Cumulative use per app. Every process counted, not just the ones stored each second.</p>
+        </header>
+        <div class="seg seg-small" role="group" aria-label="Sort offenders by" id="board-sort">
+          <button type="button" data-sort="cpu" aria-pressed="true">CPU time</button>
+          <button type="button" data-sort="battery">On battery</button>
+          <button type="button" data-sort="wakeups">Wakeups</button>
+          <button type="button" data-sort="memory">Memory</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table" id="board-table">
+            <thead><tr><th>App</th><th class="num">CPU time</th><th class="num">On battery</th><th class="num">Wakeups</th><th class="num">Peak memory</th><th>Spikes</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty" id="board-empty" hidden>Nothing recorded yet.</p>
+      </article>
+
+      <article class="card">
+        <header class="card-head">
+          <h2>Battery drain <span class="tag">estimate</span></h2>
+          <p class="sub" id="battery-sub"></p>
+        </header>
+        <div id="battery-body"><p class="empty">No battery data yet.</p></div>
+      </article>
+    </section>
+
+    <article class="card">
+      <header class="card-head">
+        <h2>Top processes right now</h2>
+        <p class="sub">CPU is per core: 100% = one core fully busy. Stored each second for processes above the CPU floor, plus the largest by memory every 30 samples.</p>
+      </header>
+      <div class="table-wrap">
+        <table class="table" id="proc-table">
+          <thead><tr><th>App</th><th>Process</th><th class="num">PID</th><th class="num">CPU</th><th class="num">Memory</th><th>Source</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="empty" id="proc-empty" hidden>No process data yet.</p>
+    </article>
+  </main>
+
+  <footer class="foot">Local only: data never leaves this Mac. Read-only: whyslow never changes or stops processes.</footer>
+</body>
+</html>
