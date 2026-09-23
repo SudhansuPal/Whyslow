@@ -1,0 +1,30 @@
+# Runtime dependencies, pinned exactly (including transitive ones).
+# Review changelogs before bumping.
+psutil==7.2.2
+
+# M3 dashboard: FastAPI on uvicorn (plain, no [standard] extras: no uvloop,
+# httptools or websockets), bound to 127.0.0.1 only.
+fastapi==0.141.1
+uvicorn==0.53.0
+starlette==1.6.0
+pydantic==2.13.5
+pydantic_core==2.46.5
+annotated-types==0.8.0
+annotated-doc==0.0.5
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+anyio==4.15.1
+idna==3.20
+h11==0.16.0
+click==8.5.0
+
+# M5 menu bar (macOS only). rumps pulls in pyobjc; the menu bar is optional -
+# every other command works without these.
+rumps==0.4.0
+pyobjc-core==12.2.2
+pyobjc-framework-Cocoa==12.2.2
+
+# Vendored, not installed: src/whyslow/web/static/vendor/chart.umd.min.js
+#   Chart.js 4.5.1 (MIT), from the npm tarball verified against the registry's
+#   sha512 integrity. File sha256:
+#   48444a82d4edcb5bec0f1965faacdde18d9c17db3063d042abada2f705c9f54a
