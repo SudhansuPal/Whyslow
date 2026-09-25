@@ -6,9 +6,8 @@ behind them. Everything stays on this Mac.
 
 This manual is the practical guide: every command, how to read the output, how
 to turn on the optional sudo feature, what whyslow **cannot** see, and what
-parts have not been verified end to end (and why). The [README](README.md) has
-the same material organised around the design; this one is organised around
-using it.
+parts have not been verified end to end (and why). The [README](README.md) is
+the short overview.
 
 ---
 
